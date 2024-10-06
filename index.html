@@ -13,6 +13,7 @@
         .blue-cell { background-color: #e6f3ff; }
         #calculateBtn { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
         .contact-info { margin-top: 20px; font-style: italic; }
+        .explanation { margin-top: 10px; font-style: italic; color: #666; }
     </style>
 </head>
 <body>
@@ -86,6 +87,7 @@
         resultHTML += `<p>ค่าเสื่อมแบบเส้นตรง: ${straightLineDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})} บาท</p>`;
         
         resultHTML += '<h3>ค่าเสื่อมแบบเส้นตรง</h3>';
+        resultHTML += '<p class="explanation">วิธีนี้คำนวณค่าเสื่อมเท่ากันทุกปี</p>';
         resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
         let remainingStraightLine = cowPrice;
         for (let i = 0; i <= productiveYears; i++) {
@@ -96,6 +98,7 @@
         resultHTML += '</table>';
 
         resultHTML += '<h3>ค่าเสื่อมตามปริมาณผลผลิตนม</h3>';
+        resultHTML += '<p class="explanation">วิธีนี้คำนวณค่าเสื่อมตามสัดส่วนของปริมาณน้ำนมที่ผลิตได้ในแต่ละปี</p>';
         resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
         let remainingProductionBased = cowPrice;
         let totalDepreciation = 0;
