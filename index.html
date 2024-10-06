@@ -91,8 +91,9 @@
         resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
         let remainingStraightLine = cowPrice;
         for (let i = 0; i <= productiveYears; i++) {
-            resultHTML += `<tr><td>${i}</td><td>${i === 0 ? '-' : straightLineDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingStraightLine.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
-            remainingStraightLine -= straightLineDepreciation;
+            let depreciation = i === 0 ? 0 : straightLineDepreciation;
+            resultHTML += `<tr><td>${i}</td><td>${depreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingStraightLine.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
+            remainingStraightLine -= depreciation;
             if (i === productiveYears - 1) remainingStraightLine = salvageValue;
         }
         resultHTML += '</table>';
@@ -109,17 +110,18 @@
             } else if (i === productiveYears) {
                 productionBasedDepreciation = remainingProductionBased - salvageValue;
             } else {
-                productionBasedDepreciation = ((cowPrice - salvageValue) * milkProduction[i-1] / totalMilk);
+                productionBasedDepreciation = Math.round((cowPrice - salvageValue) * milkProduction[i-1] / totalMilk);
                 if (totalDepreciation + productionBasedDepreciation > cowPrice - salvageValue) {
                     productionBasedDepreciation = cowPrice - salvageValue - totalDepreciation;
                 }
             }
-            resultHTML += `<tr><td>${i}</td><td>${i === 0 ? '-' : productionBasedDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingProductionBased.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
+            resultHTML += `<tr><td>${i}</td><td>${productionBasedDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingProductionBased.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
             remainingProductionBased -= productionBasedDepreciation;
             totalDepreciation += productionBasedDepreciation;
-            if (i === productiveYears - 1) remainingProductionBased = salvageValue;
         }
         resultHTML += '</table>';
+
+        resultHTML += '<p class="explanation">หมายเหตุ: มูลค่าคงเหลือในท้องที่ 1 ของวิธีตามปริมาณผลผลิตเท่ากับราคาซื้อ เนื่องจากเริ่มคิดค่าเสื่อมเมื่อโคเริ่มให้ผลผลิตจริงในท้องที่ 1</p>';
 
         document.getElementById('result').innerHTML = resultHTML;
     }
