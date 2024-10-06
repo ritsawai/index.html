@@ -69,62 +69,62 @@
 
     <script>
     function calculateDepreciation() {
-        const cowPrice = parseFloat(document.getElementById('cowPrice').value);
-        const salvageValue = parseFloat(document.getElementById('salvageValue').value);
-        const productiveYears = Math.min(parseInt(document.getElementById('productiveYears').value), 5);
-        const milkProduction = [
-            parseFloat(document.getElementById('milk1').value),
-            parseFloat(document.getElementById('milk2').value),
-            parseFloat(document.getElementById('milk3').value),
-            parseFloat(document.getElementById('milk4').value),
-            parseFloat(document.getElementById('milk5').value)
-        ].slice(0, productiveYears);
+    const cowPrice = parseFloat(document.getElementById('cowPrice').value);
+    const salvageValue = parseFloat(document.getElementById('salvageValue').value);
+    const productiveYears = Math.min(parseInt(document.getElementById('productiveYears').value), 5);
+    const milkProduction = [
+        parseFloat(document.getElementById('milk1').value),
+        parseFloat(document.getElementById('milk2').value),
+        parseFloat(document.getElementById('milk3').value),
+        parseFloat(document.getElementById('milk4').value),
+        parseFloat(document.getElementById('milk5').value)
+    ].slice(0, productiveYears);
 
-        const straightLineDepreciation = (cowPrice - salvageValue) / productiveYears;
-        const totalMilk = milkProduction.reduce((a, b) => a + b, 0);
+    const straightLineDepreciation = (cowPrice - salvageValue) / productiveYears;
+    const totalMilk = milkProduction.reduce((a, b) => a + b, 0);
 
-        let resultHTML = '<h2>ผลการคำนวณ</h2>';
-        resultHTML += `<p>ค่าเสื่อมแบบเส้นตรง: ${straightLineDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})} บาท</p>`;
-        
-        // วิธีเส้นตรง
-        resultHTML += '<h3>ค่าเสื่อมแบบเส้นตรง</h3>';
-        resultHTML += '<p class="explanation">วิธีนี้คำนวณค่าเสื่อมเท่ากันทุกปี</p>';
-        resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
-        let remainingStraightLine = cowPrice;
-        for (let i = 0; i <= productiveYears; i++) {
-            let depreciation = i === 0 ? 0 : straightLineDepreciation;
-            resultHTML += `<tr><td>${i}</td><td>${depreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingStraightLine.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
-            remainingStraightLine -= depreciation;
-        }
-        resultHTML += '</table>';
-
-        // วิธีตามปริมาณผลผลิต
-        resultHTML += '<h3>ค่าเสื่อมตามปริมาณผลผลิตนม</h3>';
-        resultHTML += '<p class="explanation">วิธีนี้คำนวณค่าเสื่อมตามสัดส่วนของปริมาณน้ำนมที่ผลิตได้ในแต่ละปี</p>';
-        resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
-        let remainingProductionBased = cowPrice;
-        let totalDepreciation = 0;
-        for (let i = 0; i <= productiveYears; i++) {
-            let productionBasedDepreciation;
-            if (i === 0 || i === 1) {
-                productionBasedDepreciation = 0; // ไม่มีค่าเสื่อมในท้องที่ 0 และ 1
-            } else if (i === productiveYears) {
-                productionBasedDepreciation = remainingProductionBased - salvageValue;
-            } else {
-                productionBasedDepreciation = Math.round((cowPrice - salvageValue) * milkProduction[i-2] / totalMilk);
-            }
-            resultHTML += `<tr><td>${i}</td><td>${productionBasedDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingProductionBased.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
-            if (i > 1) { // เริ่มหักค่าเสื่อมหลังท้องที่ 1
-                remainingProductionBased -= productionBasedDepreciation;
-                totalDepreciation += productionBasedDepreciation;
-            }
-        }
-        resultHTML += '</table>';
-
-        resultHTML += '<p class="explanation">หมายเหตุ: ในวิธีตามปริมาณผลผลิต มูลค่าคงเหลือในท้องที่ 0 และ 1 เท่ากับราคาซื้อ เนื่องจากเริ่มคิดค่าเสื่อมเมื่อสิ้นสุดการให้นมในท้องที่ 1</p>';
-
-        document.getElementById('result').innerHTML = resultHTML;
+    let resultHTML = '<h2>ผลการคำนวณ</h2>';
+    resultHTML += `<p>ค่าเสื่อมแบบเส้นตรง: ${straightLineDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})} บาท</p>`;
+    
+    // วิธีเส้นตรง
+    resultHTML += '<h3>ค่าเสื่อมแบบเส้นตรง</h3>';
+    resultHTML += '<p class="explanation">วิธีนี้คำนวณค่าเสื่อมเท่ากันทุกปี</p>';
+    resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
+    let remainingStraightLine = cowPrice;
+    for (let i = 0; i <= productiveYears; i++) {
+        let depreciation = i === 0 ? 0 : straightLineDepreciation;
+        resultHTML += `<tr><td>${i}</td><td>${depreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingStraightLine.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
+        remainingStraightLine -= depreciation;
     }
+    resultHTML += '</table>';
+
+    // วิธีตามปริมาณผลผลิต
+    resultHTML += '<h3>ค่าเสื่อมตามปริมาณผลผลิตนม</h3>';
+    resultHTML += '<p class="explanation">วิธีนี้คำนวณค่าเสื่อมตามสัดส่วนของปริมาณน้ำนมที่ผลิตได้ในแต่ละปี</p>';
+    resultHTML += '<table><tr><th>ท้องที่</th><th>ค่าเสื่อม (บาท)</th><th>มูลค่าคงเหลือ (บาท)</th></tr>';
+    let remainingProductionBased = cowPrice;
+    let totalDepreciation = 0;
+    for (let i = 0; i <= productiveYears; i++) {
+        let productionBasedDepreciation;
+        if (i === 0 || i === 1) {
+            productionBasedDepreciation = 0;
+        } else if (i === productiveYears) {
+            productionBasedDepreciation = remainingProductionBased - salvageValue;
+        } else {
+            productionBasedDepreciation = Math.round((cowPrice - salvageValue) * milkProduction[i-2] / totalMilk);
+        }
+        resultHTML += `<tr><td>${i}</td><td>${productionBasedDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingProductionBased.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
+        if (i > 1) {
+            remainingProductionBased -= productionBasedDepreciation;
+            totalDepreciation += productionBasedDepreciation;
+        }
+    }
+    resultHTML += '</table>';
+
+    resultHTML += '<p class="explanation">หมายเหตุ: ในวิธีตามปริมาณผลผลิต มูลค่าคงเหลือในท้องที่ 0 และ 1 เท่ากับราคาซื้อ เนื่องจากเริ่มคิดค่าเสื่อมเมื่อสิ้นสุดการให้นมในท้องที่ 1</p>';
+
+    document.getElementById('result').innerHTML = resultHTML;
+}
     </script>
 </body>
 </html>
