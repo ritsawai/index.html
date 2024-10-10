@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เครื่องมือคำนวณค่าเสื่อมโคนม</title>
+    <title>แอปพลิเคชันคำนวณค่าเสื่อมโคนม</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1 { color: #2c3e50; }
         table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
         th { background-color: #f2f2f2; }
         input { width: 100px; }
         .blue-cell { background-color: #e6f3ff; }
-        button { padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; margin-right: 10px; }
-        .contact-info { margin-top: 20px; font-style: italic; }
+        button { padding: 10px; background-color: #3498db; color: white; border: none; cursor: pointer; margin-right: 10px; }
+        button:hover { background-color: #2980b9; }
+        .contact-info { margin-top: 20px; font-style: italic; background-color: #f8f9fa; padding: 15px; border-radius: 5px; }
+        .app-description { margin-top: 20px; font-style: italic; background-color: #e9f7ef; padding: 15px; border-radius: 5px; color: #27ae60; }
         .explanation { margin-top: 10px; font-style: italic; color: #666; }
         .error { color: red; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>เครื่องมือคำนวณค่าเสื่อมโคนม</h1>
+    <h1>แอปพลิเคชันคำนวณค่าเสื่อมโคนม</h1>
     <div id="inputForm">
         <table>
             <tr>
@@ -67,6 +70,10 @@
     <div id="error" class="error"></div>
     <div id="result"></div>
     <canvas id="depreciationChart"></canvas>
+
+    <div class="app-description">
+        <p>แอปพลิเคชันคำนวณค่าเสื่อมโคนม - เครื่องมือทันสมัยสำหรับเกษตรกรยุคใหม่ ช่วยคุณวางแผนการเงินและจัดการฟาร์มอย่างมืออาชีพ ง่ายต่อการใช้งาน แม่นยำ และให้ผลลัพธ์ที่คุณเชื่อถือได้</p>
+    </div>
 
     <div class="contact-info">
         <p>สำหรับข้อมูลเพิ่มเติม กรุณาติดต่อ:</p>
@@ -133,13 +140,18 @@
             let productionBasedDepreciation;
             if (i === 0) {
                 productionBasedDepreciation = 0;
+            } else if (i === 1) {
+                productionBasedDepreciation = Math.round((cowPrice - salvageValue) * milkProduction[i-1] / totalMilk);
+                remainingProductionBased = cowPrice; // ยังไม่หักค่าเสื่อมในปีแรก
             } else if (i === productiveYears) {
                 productionBasedDepreciation = remainingProductionBased - salvageValue;
             } else {
                 productionBasedDepreciation = Math.round((cowPrice - salvageValue) * milkProduction[i-1] / totalMilk);
             }
             resultHTML += `<tr><td>${i}</td><td>${productionBasedDepreciation.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td><td>${remainingProductionBased.toLocaleString('th-TH', {maximumFractionDigits: 0})}</td></tr>`;
-            remainingProductionBased -= productionBasedDepreciation;
+            if (i > 0) {
+                remainingProductionBased -= productionBasedDepreciation;
+            }
             productionBasedData.push(remainingProductionBased);
         }
         resultHTML += '</table>';
